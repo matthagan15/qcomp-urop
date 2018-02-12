@@ -1,0 +1,2460 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    143890,       2452]
+NotebookOptionsPosition[    142780,       2416]
+NotebookOutlinePosition[    143144,       2432]
+CellTagsIndexPosition[    143101,       2429]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{
+  "H", ",", "A", ",", "B", ",", "x1", ",", "x0", ",", "psi", ",", "out", ",", 
+   "Dmat", ",", "d1", ",", "d2", ",", "d3", ",", "d4", ",", "d5", ",", "d6", 
+   ",", "d7", ",", "d8", ",", "psi0", ",", "U", ",", "Re0", ",", "Re1", ",", 
+   "Im1", ",", "Im0"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Clear", "[", 
+   RowBox[{
+   "sigX", ",", "sigZ", ",", "sigY", ",", "theta1", ",", "theta2", ",", 
+    "theta3", ",", "alpha"}], "]"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Section", " ", "used", " ", "for", " ", "universal", " ", "objects", " ", 
+    
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"pauli", "'"}], "s"}], ",", " ", "H", ",", " ", 
+      RowBox[{"etc", "."}]}], ")"}], " ", "and", " ", 
+    RowBox[{"functions", ".", " ", "If"}], " ", "new", " ", "functions", " ", 
+    "need", " ", "to", " ", "be", " ", 
+    RowBox[{"written", "/", "tested"}], " ", "use", " ", "a", " ", "new", " ",
+     "cell", " ", "beneath", " ", "and", " ", "then", " ", 
+    RowBox[{"merge", "."}]}], " ", "\[IndentingNewLine]", "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sigX", " ", "=", " ", 
+   RowBox[{"PauliMatrix", "[", "1", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sigY", " ", "=", " ", 
+   RowBox[{"PauliMatrix", "[", "2", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sigZ", " ", "=", " ", 
+   RowBox[{"PauliMatrix", "[", "3", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"H", " ", "=", " ", 
+    RowBox[{
+     RowBox[{"1", "/", 
+      RowBox[{"(", 
+       RowBox[{"Sqrt", "[", "2", "]"}], ")"}]}], "*", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", 
+         RowBox[{"-", "1"}]}], "}"}]}], "}"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"rz", "[", "thetaZ_", "]"}], " ", ":=", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Cos", "[", 
+      RowBox[{"thetaZ", "/", "2"}], "]"}], "*", 
+     RowBox[{"IdentityMatrix", "[", "2", "]"}]}], " ", "-", " ", 
+    RowBox[{"I", "*", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"thetaZ", "/", "2"}], "]"}], "*", "sigZ"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"rx", "[", "thetaX_", "]"}], " ", ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Cos", "[", 
+       RowBox[{"thetaX", "/", "2"}], "]"}], "*", 
+      RowBox[{"IdentityMatrix", "[", "2", "]"}]}], " ", "-", " ", 
+     RowBox[{"I", "*", 
+      RowBox[{"Sin", "[", 
+       RowBox[{"thetaX", "/", "2"}], "]"}], "*", "sigX"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"prod", "[", 
+     RowBox[{"psi_", ",", "phi_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"(", " ", 
+      RowBox[{"psi", ".", 
+       RowBox[{"Conjugate", "[", "phi", "]"}]}], ")"}], "*", 
+     RowBox[{"(", 
+      RowBox[{"phi", ".", 
+       RowBox[{"Conjugate", "[", "psi", "]"}]}], ")"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"buildU", "[", 
+     RowBox[{"alpha_", ",", "theta1_", ",", "theta2_", ",", "theta3_"}], 
+     "]"}], ":=", " ", 
+    RowBox[{
+     RowBox[{"Exp", "[", 
+      RowBox[{"I", "*", "alpha"}], "]"}], "*", 
+     RowBox[{
+      RowBox[{"rz", "[", "theta1", "]"}], ".", 
+      RowBox[{"rx", "[", "theta2", "]"}], ".", 
+      RowBox[{"rz", "[", "theta3", "]"}]}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"params", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+    "d1", ",", "d2", ",", "d3", ",", "d4", ",", "d5", ",", "d6", ",", "d7", 
+     ",", "d8"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getArgMins", "[", 
+   RowBox[{"psi_", ",", "phi_", ",", "params"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"Im0", ",", "Im1", ",", "Re0", ",", "Re1"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Re0", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Re", "[", 
+         RowBox[{"phi", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}], " ", "-", " ", 
+        RowBox[{"Re", "[", 
+         RowBox[{"psi", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}]}], ")"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Re1", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Re", "[", 
+         RowBox[{"phi", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}], " ", "-", " ", 
+        RowBox[{"Re", "[", 
+         RowBox[{"psi", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ")"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Im0", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Im", "[", 
+         RowBox[{"phi", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}], " ", "-", " ", 
+        RowBox[{"Im", "[", 
+         RowBox[{"psi", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "]"}]}], ")"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Im1", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Im", "[", 
+         RowBox[{"phi", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}], " ", "-", " ", 
+        RowBox[{"Im", "[", 
+         RowBox[{"psi", "[", 
+          RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ")"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Return", "[", 
+      RowBox[{"NArgMin", "[", 
+       RowBox[{
+        RowBox[{"Re0", "+", "Re1", "+", "Im0", "+", "Im1"}], ",", "params"}], 
+       "]"}], "]"}], ";"}]}], "\[IndentingNewLine]", 
+   "]"}]}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.727134479832821*^9, 3.72713450806245*^9}, 
+   3.727135089353318*^9, {3.7271373543755007`*^9, 3.727137357542821*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"Clear", "[", 
+  RowBox[{"getOptDMat3Q", ",", "testOptMat3Q", ",", "getAvgOverlap3Q"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getOptDMat3Q", "[", 
+   RowBox[{"U_", ",", "n_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "A", ",", "B", ",", "d1", ",", "d2", ",", "d3", ",", "d4", ",", "d5", 
+      ",", "d6", ",", "d7", ",", "d8", ",", "t", ",", "psi", ",", "phi", ",", 
+      "psi0", ",", "Dmat", ",", "temp", ",", "AtUtU", ",", "UtUtB", ",", 
+      "finalMat"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"t", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+       "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+        "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "0"}], ",", 
+       RowBox[{"i", "<", "n"}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"Print", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{"\"\<First For Loop: ``\>\"", " ", ",", "i"}], "]"}], 
+          "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"A", " ", "=", " ", 
+          RowBox[{"DiagonalMatrix", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Exp", "[", 
+              RowBox[{"I", "*", 
+               RowBox[{"RandomReal", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                  RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}], ",", 
+             RowBox[{"Exp", "[", 
+              RowBox[{"I", "*", 
+               RowBox[{"RandomReal", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                  RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}]}], "}"}], 
+           "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"B", " ", "=", " ", 
+          RowBox[{"DiagonalMatrix", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Exp", "[", 
+              RowBox[{"I", "*", 
+               RowBox[{"RandomReal", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                  RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}], ",", 
+             RowBox[{"Exp", "[", 
+              RowBox[{"I", "*", 
+               RowBox[{"RandomReal", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                  RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}]}], "}"}], 
+           "]"}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+         RowBox[{"IdentityMatrix", "[", "2", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"B", " ", "=", " ", 
+         RowBox[{"IdentityMatrix", "[", "2", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"psi0", " ", "=", " ", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{"RandomComplex", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"-", "1"}], "-", "I"}], ",", 
+              RowBox[{"1", "+", "I"}]}], "}"}], ",", "2"}], "]"}], "]"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"psi", " ", "=", " ", 
+         RowBox[{"B", ".", "H", ".", "A", ".", "psi0"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"psi0", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{"psi0", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0"}], "}"}]}], "]"}], "//", "Flatten"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"AtUtU", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{
+            RowBox[{"ArrayFlatten", "[", 
+             RowBox[{"TensorProduct", "[", 
+              RowBox[{"A", ",", "U"}], "]"}], "]"}], ",", "U"}], "]"}], "//", 
+          "ArrayFlatten"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"UtUtB", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{
+            RowBox[{"ArrayFlatten", "[", 
+             RowBox[{"TensorProduct", "[", 
+              RowBox[{
+               RowBox[{"ConjugateTranspose", "[", "U", "]"}], ",", 
+               RowBox[{"ConjugateTranspose", "[", "U", "]"}]}], "]"}], "]"}], 
+            ",", "B"}], "]"}], "//", "ArrayFlatten"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"Dmat", " ", "=", " ", 
+         RowBox[{"DiagonalMatrix", "[", 
+          RowBox[{"Exp", "[", 
+           RowBox[{"I", "*", 
+            RowBox[{"{", 
+             RowBox[{
+             "d1", ",", "d2", ",", "d3", ",", "d4", ",", "d5", ",", "d6", ",",
+               "d7", ",", "d8"}], "}"}]}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"finalMat", " ", "=", " ", 
+         RowBox[{"UtUtB", ".", "Dmat", ".", "AtUtU"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"phi", " ", "=", " ", 
+         RowBox[{"finalMat", ".", "psi0"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"StringForm", "[", 
+          RowBox[{"\"\<Output State: ``\>\"", ",", 
+           RowBox[{"MatrixForm", "[", 
+            RowBox[{"Simplify", "[", "phi", "]"}], "]"}]}], "]"}], "]"}], ";",
+         "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"StringForm", "[", 
+          RowBox[{"\"\<Input State: ``\>\"", ",", 
+           RowBox[{"MatrixForm", "[", "psi", "]"}]}], "]"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"phi", " ", "=", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"phi", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ";;", "2"}], "]"}], "]"}], "//", "Normalize"}], "//",
+           "Simplify"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"temp", " ", "=", " ", 
+         RowBox[{"getArgMins", "[", 
+          RowBox[{"psi", ",", "phi", ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "d1", ",", "d2", ",", "d3", ",", "d4", ",", "d5", ",", "d6", ",", 
+             "d7", ",", "d8"}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+        
+        RowBox[{"t", " ", "=", " ", 
+         RowBox[{"t", " ", "+", "temp"}]}], "  ", ";"}]}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Return", "[", 
+      RowBox[{"DiagonalMatrix", "[", 
+       RowBox[{"Exp", "[", 
+        RowBox[{"I", "*", 
+         RowBox[{"t", "/", "n"}]}], "]"}], "]"}], "]"}], ";"}]}], 
+   "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"testOptMat3Q", "[", 
+   RowBox[{"Dmat_", ",", "U_", ",", "n_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "A", ",", "B", ",", "AtUtU", ",", "UtUtB", ",", "psi", ",", "psi0", ",", 
+      "phi", ",", "results", ",", "finalMat"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"results", " ", "=", " ", 
+      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "0"}], ",", 
+       RowBox[{"i", "<", "n"}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+         RowBox[{"DiagonalMatrix", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Exp", "[", 
+             RowBox[{"I", "*", 
+              RowBox[{"RandomReal", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                 RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}], ",", 
+            RowBox[{"Exp", "[", 
+             RowBox[{"I", "*", 
+              RowBox[{"RandomReal", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                 RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}]}], "}"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"B", " ", "=", " ", 
+         RowBox[{"DiagonalMatrix", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Exp", "[", 
+             RowBox[{"I", "*", 
+              RowBox[{"RandomReal", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                 RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}], ",", 
+            RowBox[{"Exp", "[", 
+             RowBox[{"I", "*", 
+              RowBox[{"RandomReal", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "Pi"}], "/", "2"}], ",", 
+                 RowBox[{"Pi", "/", "2"}]}], "}"}], "]"}]}], "]"}]}], "}"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"psi0", " ", "=", " ", 
+         RowBox[{"Normalize", "[", 
+          RowBox[{"RandomComplex", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"-", "1"}], "-", "I"}], ",", 
+              RowBox[{"1", "+", "I"}]}], "}"}], ",", "2"}], "]"}], "]"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"psi", " ", "=", " ", 
+         RowBox[{"B", ".", "H", ".", "A", ".", "psi0"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"psi0", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{"psi0", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "0"}], "}"}]}], "]"}], "//", "Flatten"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"AtUtU", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{
+            RowBox[{"ArrayFlatten", "[", 
+             RowBox[{"TensorProduct", "[", 
+              RowBox[{"A", ",", "U"}], "]"}], "]"}], ",", "U"}], "]"}], "//", 
+          "ArrayFlatten"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"UtUtB", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"TensorProduct", "[", 
+           RowBox[{
+            RowBox[{"ArrayFlatten", "[", 
+             RowBox[{"TensorProduct", "[", 
+              RowBox[{
+               RowBox[{"ConjugateTranspose", "[", "U", "]"}], ",", 
+               RowBox[{"ConjugateTranspose", "[", "U", "]"}]}], "]"}], "]"}], 
+            ",", "B"}], "]"}], "//", "ArrayFlatten"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"finalMat", " ", "=", " ", 
+         RowBox[{"UtUtB", ".", "Dmat", ".", "AtUtU"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"phi", " ", "=", " ", 
+         RowBox[{"finalMat", ".", "psi0"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"phi", " ", "=", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"phi", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ";;", "2"}], "]"}], "]"}], "//", "Normalize"}], "//",
+           "Simplify"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"results", ",", 
+          RowBox[{"prod", "[", 
+           RowBox[{"phi", ",", "psi"}], "]"}]}], "]"}], ";"}]}], 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Return", "[", "results", "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"getAvgOverlap3Q", "[", 
+   RowBox[{
+   "alpha_", ",", "theta1_", ",", "theta2_", ",", "theta3_", ",", "n_"}], 
+   "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"U", ",", "Dmat", ",", "results"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"U", " ", "=", " ", 
+      RowBox[{"buildU", "[", 
+       RowBox[{"alpha", ",", "theta1", ",", "theta2", ",", "theta3"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Dmat", " ", "=", " ", 
+      RowBox[{"getOptDMat3Q", "[", 
+       RowBox[{"U", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"results", " ", "=", " ", 
+      RowBox[{"testOptMat3Q", "[", 
+       RowBox[{"Dmat", ",", "U", ",", "n"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Print", "[", 
+      RowBox[{"StringForm", "[", 
+       RowBox[{"\"\<Matrix: ``\>\"", ",", 
+        RowBox[{"MatrixForm", "[", "Dmat", "]"}]}], "]"}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Return", "[", 
+      RowBox[{"Mean", "[", "results", "]"}], "]"}]}]}], "\[IndentingNewLine]",
+    "]"}]}]}], "Input",
+ CellChangeTimes->{{3.727134683491178*^9, 3.727134684921092*^9}, {
+  3.727134763909491*^9, 3.727134770940394*^9}, {3.727135290776164*^9, 
+  3.727135312342904*^9}, {3.7271355234092693`*^9, 3.727135535400959*^9}, {
+  3.727135595541789*^9, 3.727135601420754*^9}, {3.727137018277012*^9, 
+  3.727137031813336*^9}, {3.72720831252533*^9, 3.727208331123232*^9}, {
+  3.7272083683611193`*^9, 3.727208376232902*^9}, {3.7272089263480787`*^9, 
+  3.727208954826249*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"getOptDMat3Q", "[", 
+     RowBox[{"H", ",", "2"}], "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"getAvgOverlap3Q", "[", 
+    RowBox[{
+     RowBox[{"Pi", "/", "2"}], ",", 
+     RowBox[{"Pi", "/", "2"}], ",", 
+     RowBox[{"Pi", "/", "2"}], ",", 
+     RowBox[{"Pi", "/", "2"}], ",", "5"}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.727135273841979*^9, 3.7271352740318613`*^9}, {
+  3.727136362854349*^9, 3.727136370101259*^9}, {3.727137239156355*^9, 
+  3.7271372627713003`*^9}, {3.7272083402675047`*^9, 3.727208342983971*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d1$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478751969`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478751969`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d2$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478751969`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478751969`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d1$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d2$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d1$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d2$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d1$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d2$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.13624756367802648`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.1386602298860649`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.010691861478752007`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.15682992743052881`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[0.010691861478751969`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[0.010691861478751969`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[0.010691861478751969`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[0.010691861478751969`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[-0.13624756367802648`, -0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[0.010691861478752007`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[-0.13624756367802648`, -0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[0.010691861478752007`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[-0.13624756367802648`, -0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[0.010691861478752007`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[0.13624756367802648`, 0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[-0.13624756367802648`, -0.1386602298860649] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[-0.010691861478752007`, 0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[0.010691861478752007`, -0.15682992743052881`] 
+      E^(Complex[0, 1] $CellContext`d8$405033)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208963710758*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", \
+TagBox[GridBox[{{RowBox[{RowBox[{\\\"0.41560745580804487`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.05139166538319595`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}]}, \
+{RowBox[{RowBox[{\\\"0.3551251537669829`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.8357723760497725`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}]}}, Rule[ColumnAlignments, Center], \
+Rule[RowSpacings, 1], Rule[ColumnAlignments, Left]], Column], \
+\\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[0.41560745580804487`, -0.05139166538319595], Complex[
+    0.3551251537669829, 0.8357723760497725]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.7272089637191763`*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405033\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.07318746069079558`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.10248365991074893`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.07318746069079558`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10248365991074893`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405033\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405033\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.05549800826538469`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.20871192138329453`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405033\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[0.07318746069079558, 0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[0.07318746069079558, 0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d8$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d1$405033) + 
+     Complex[0.07318746069079558, 0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d3$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d5$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d7$405033), 
+     Complex[-0.07318746069079558, -0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d2$405033) + 
+     Complex[0.07318746069079558, 0.10248365991074893`] 
+      E^(Complex[0, 1] $CellContext`d4$405033) + 
+     Complex[-0.05549800826538469, 0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d6$405033) + 
+     Complex[0.05549800826538469, -0.20871192138329453`] 
+      E^(Complex[0, 1] $CellContext`d8$405033)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208963902813*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.05003332706193947`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.8801940232332306`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}, \
+{RowBox[{RowBox[{\\\"-\\\", \\\"0.36397747095634403`\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.3004588961635786`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}}, \
+Rule[ColumnAlignments, Center], Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Left]], Column], \\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[-0.05003332706193947, -0.8801940232332306], 
+    Complex[-0.36397747095634403`, 0.3004588961635786]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208963912188*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456527`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456527`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456527`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456527`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15691619877444724`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.08028175304253145`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15691619877444724`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.08028175304253145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.14815543751983246`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.09737614196456526`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456527] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456527] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456527] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456527] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.15691619877444724`, 0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.15691619877444724`, 0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.15691619877444724`, 0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15691619877444724`, -0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.15691619877444724`, 0.08028175304253145] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.14815543751983246`, -0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.14815543751983246`, 0.09737614196456526] 
+      E^(Complex[0, 1] $CellContext`d8$405444)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.7272089641578712`*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.8628728910854448`\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.04835023330804128`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}, \
+{RowBox[{RowBox[{\\\"-\\\", \\\"0.024779174765977907`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.5024924091633831`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}}, \
+Rule[ColumnAlignments, Center], Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Left]], Column], \\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[-0.8628728910854448, 0.04835023330804128], 
+    Complex[-0.024779174765977907`, -0.5024924091633831]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964167823*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.04468106020326462`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.04468106020326462`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.04468106020326462`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.04468106020326462`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.15698445500376912`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.13407470961948828`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.15698445500376912`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13407470961948828`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.044681060203264636`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.13372903942948114`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.04468106020326462, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.04468106020326462, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.04468106020326462, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.04468106020326462, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.15698445500376912`, 0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.044681060203264636`, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.15698445500376912`, 0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.044681060203264636`, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.15698445500376912`, 0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.044681060203264636`, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.15698445500376912`, -0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.15698445500376912`, 0.13407470961948828`] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.044681060203264636`, -0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.044681060203264636`, 0.13372903942948114`] 
+      E^(Complex[0, 1] $CellContext`d8$405444)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964394528*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.31764196805482714`\\\"}], \\\"-\\\", RowBox[{\\\"0.0009777029416323524`\
+\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.5703962133374895`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.7574633879188267`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}}, \
+Rule[ColumnAlignments, Center], Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Left]], Column], \\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[-0.31764196805482714`, -0.0009777029416323524], 
+    Complex[-0.5703962133374895, -0.7574633879188267]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.7272089644016533`*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.0076770177774995434`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.0076770177774995434`\\\", \\\
+\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\
+\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.199589698675577`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"-\
+\\\", RowBox[{\\\"0.10296505668925578`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d5$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.199589698675577`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"-\
+\\\", RowBox[{\\\"0.10296505668925578`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.0076770177774995434`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.0076770177774995434`\\\", \\\
+\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\
+\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.199589698675577`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"-\
+\\\", RowBox[{\\\"0.10296505668925578`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d6$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.199589698675577`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"-\
+\\\", RowBox[{\\\"0.10296505668925578`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d5$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d6$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d5$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d6$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d5$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"-\\\", \\\"0.10955917433795627`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.007677017777499544`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \
+\\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", RowBox[{\\\"\
+\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.10955917433795627`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.007677017777499544`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d6$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.19958969867557705`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.1029650566892558`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[-0.10955917433795627`, -0.0076770177774995434`] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.10955917433795627`, -0.0076770177774995434`] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.199589698675577, -0.10296505668925578`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.199589698675577, -0.10296505668925578`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.10955917433795627`, -0.0076770177774995434`] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.10955917433795627`, -0.0076770177774995434`] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.199589698675577, -0.10296505668925578`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.199589698675577, -0.10296505668925578`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.10955917433795627`, 0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.19958969867557705`, -0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.10955917433795627`, 0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.19958969867557705`, -0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.10955917433795627`, 0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.19958969867557705`, -0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[-0.10955917433795627`, -0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.10955917433795627`, 0.007677017777499544] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.19958969867557705`, 0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.19958969867557705`, -0.1029650566892558] 
+      E^(Complex[0, 1] $CellContext`d8$405444)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964643477*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", \
+TagBox[GridBox[{{RowBox[{RowBox[{\\\"0.25464477709164846`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.3129430445599585`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.8744050580161928`\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.26951527392188174`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}}, \
+Rule[ColumnAlignments, Center], Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Left]], Column], \\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[0.25464477709164846`, -0.3129430445599585], 
+    Complex[-0.8744050580161928, 0.26951527392188174`]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964650701*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874037`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108188`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874037`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108188`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874037`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108188`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874037`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108188`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.1692412480564259`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.06873879947655988`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.09569126055874039`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.14133492157108185`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.09569126055874037, 0.14133492157108188`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.09569126055874037, 0.14133492157108188`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.09569126055874037, 0.14133492157108188`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.09569126055874037, 0.14133492157108188`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.1692412480564259, -0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.09569126055874039, 0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.1692412480564259, -0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.09569126055874039, 0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.1692412480564259, -0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.09569126055874039, 0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.1692412480564259, 0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.1692412480564259, -0.06873879947655988] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.09569126055874039, -0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.09569126055874039, 0.14133492157108185`] 
+      E^(Complex[0, 1] $CellContext`d8$405444)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964890913*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", \
+TagBox[GridBox[{{RowBox[{RowBox[{\\\"0.20803077966319689`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.5941782108075145`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.74934229359419`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.2053328408835322`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}}, Rule[ColumnAlignments, Center], \
+Rule[RowSpacings, 1], Rule[ColumnAlignments, Left]], Column], \
+\\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[0.20803077966319689`, 0.5941782108075145], Complex[
+    0.74934229359419, -0.2053328408835322]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208964900031*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Output State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028004`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028004`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028004`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028004`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"-\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"+\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d1$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d3$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d5$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d7$405444\\\"}]]}]}]}, {RowBox[{RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \\\"\[VeryThinSpace]\\\"}], \\\
+\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\
+\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d2$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.054492692731852595`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.05502962604328597`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\
+\\\"\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d4$405444\\\"}]]}], \\\"+\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \\\", \\\"\[ImaginaryI]\
+\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\[ExponentialE]\\\", \
+RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \\\"d6$405444\\\"}]]}], \\\"-\\\", \
+RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"0.2142842682453612`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.10288118914028002`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", SuperscriptBox[\\\"\
+\[ExponentialE]\\\", RowBox[{\\\"\[ImaginaryI]\\\", \\\" \\\", \
+\\\"d8$405444\\\"}]]}]}]}}, Rule[RowSpacings, 1], Rule[ColumnAlignments, \
+Center], Rule[ColumnAlignments, Left]], Column], \\\"\[NoBreak]\\\", \
+\\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Output State: ``", 
+   MatrixForm[{
+    Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028004`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028004`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028004`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028004`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.054492692731852595`, -0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.054492692731852595`, -0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d8$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d1$405444) + 
+     Complex[-0.054492692731852595`, -0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d3$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d5$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d7$405444), 
+     Complex[0.054492692731852595`, 0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d2$405444) + 
+     Complex[-0.054492692731852595`, -0.05502962604328597] 
+      E^(Complex[0, 1] $CellContext`d4$405444) + 
+     Complex[0.2142842682453612, 0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d6$405444) + 
+     Complex[-0.2142842682453612, -0.10288118914028002`] 
+      E^(Complex[0, 1] $CellContext`d8$405444)}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208965145939*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Input State: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", TagBox[GridBox[{{RowBox[{RowBox[{\\\"-\\\", \
+\\\"0.45195882648833685`\\\"}], \\\"-\\\", \
+RowBox[{\\\"0.1353446590250418`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}]}, \
+{RowBox[{RowBox[{\\\"0.7602160469347997`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"0.4466392329559806`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}]}}, Rule[ColumnAlignments, Center], \
+Rule[RowSpacings, 1], Rule[ColumnAlignments, Left]], Column], \
+\\\"\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, \
+MatrixForm[BoxForm`e$]]]\\)\"\>",
+  StringForm["Input State: ``", 
+   MatrixForm[{Complex[-0.45195882648833685`, -0.1353446590250418], Complex[
+    0.7602160469347997, 0.4466392329559806]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.727208965156775*^9}],
+
+Cell[BoxData[
+ InterpretationBox["\<\"Matrix: \\!\\(\\*TagBox[RowBox[{\\\"(\\\", \\\"\
+\[NoBreak]\\\", GridBox[{{RowBox[{RowBox[{\\\"0.9867420500295153`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.16229641617592622`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.7707925993700935`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.6370861548929583`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.9363470754386785`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.3510757102356041`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.926046233629838`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.37741008621921013`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.99946105968082`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.032826668757162246`\\\", \
+\\\" \\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.3590465457870864`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.9333196547584122`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.8652713401436849`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.5013038080106229`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}]}, {RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"+\\\", RowBox[{\\\"0.`\\\", \\\" \\\", \\\"\
+\[ImaginaryI]\\\"}]}], RowBox[{RowBox[{\\\"0.4568837423767999`\\\", \\\"\
+\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"0.8895264166688756`\\\", \\\" \
+\\\", \\\"\[ImaginaryI]\\\"}]}]}}, Rule[RowSpacings, 1], Rule[ColumnSpacings, \
+1], Rule[RowAlignments, Baseline], Rule[ColumnAlignments, Center]], \\\"\
+\[NoBreak]\\\", \\\")\\\"}], Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\\)\
+\"\>",
+  StringForm["Matrix: ``", 
+   MatrixForm[CompressedData["
+1:eJxTTMoPSuNgYGAoZgESPpnFJWg8JhCPHUg45+cW5KRWFEXe9xNImfzevujR
+s7vMiseO2GMqYYACOGMYKiEQSkSYmZR80jZ01Qv7Iqm//xuYkp8Mx4CkPJSI
+UCJzJ0yl79tb+6LXBRWObBXXhlxA0iWUiFCy+ijDNu1FwIDcVhu/qEb9xuAK
+yMESSkQo8emZd2jqb2AZGexbb7ni3AI6BuQQCiUilGTk/oyZ9+uafZHRDRu9
+g3ff7h8NJfKU7FrZ1Oq74bV9kUbTDI91XA+ISpEjLpSIUHLc7anfVNu79kWK
+qydIMZS/2Q8AmiiBfw==
+    "]]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.727135576535788*^9, 3.72713560931168*^9, {3.727136365542036*^9, 
+   3.727136372141416*^9}, {3.727137216594162*^9, 3.727137246252328*^9}, 
+   3.727137278698209*^9, 3.7271373813770037`*^9, 3.727208343926383*^9, 
+   3.7272083810424833`*^9, 3.7272089654077806`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"0.8902701135771472`", "\[VeryThinSpace]", "+", 
+  RowBox[{"0.`", " ", "\[ImaginaryI]"}]}]], "Output",
+ CellChangeTimes->{
+  3.727135276636829*^9, 3.7271353232834044`*^9, 3.727135575361568*^9, 
+   3.727135608224897*^9, {3.727136365549204*^9, 3.7271363721487417`*^9}, {
+   3.727137216601727*^9, 3.727137246263361*^9}, 3.727137278706502*^9, 
+   3.727137381385057*^9, 3.727208345440196*^9, 3.727208382677352*^9, 
+   3.727208965418602*^9}]
+}, Open  ]]
+},
+WindowSize->{1920, 1036},
+WindowMargins->{{Automatic, 1440}, {236, Automatic}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 5914, 165, 558, "Input"],
+Cell[6475, 187, 13490, 330, 1125, "Input"],
+Cell[CellGroupData[{
+Cell[19990, 521, 611, 14, 75, "Input"],
+Cell[CellGroupData[{
+Cell[20626, 539, 14972, 228, 166, "Print"],
+Cell[35601, 769, 1122, 20, 40, "Print"],
+Cell[36726, 791, 14836, 220, 166, "Print"],
+Cell[51565, 1013, 1088, 18, 40, "Print"],
+Cell[52656, 1033, 14838, 220, 166, "Print"],
+Cell[67497, 1255, 1090, 18, 40, "Print"],
+Cell[68590, 1275, 14888, 220, 166, "Print"],
+Cell[83481, 1497, 1095, 18, 40, "Print"],
+Cell[84579, 1517, 14856, 228, 166, "Print"],
+Cell[99438, 1747, 1105, 19, 40, "Print"],
+Cell[100546, 1768, 14892, 220, 166, "Print"],
+Cell[115441, 1990, 1112, 19, 40, "Print"],
+Cell[116556, 2011, 14940, 220, 166, "Print"],
+Cell[131499, 2233, 1102, 19, 40, "Print"],
+Cell[132604, 2254, 9687, 148, 142, "Print"]
+}, Open  ]],
+Cell[142306, 2405, 458, 8, 32, "Output"]
+}, Open  ]]
+}
+]
+*)
+
